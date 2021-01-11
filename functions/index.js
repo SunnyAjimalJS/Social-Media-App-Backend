@@ -6,7 +6,7 @@ admin.initializeApp();
 const express = require("express");
 const app = express();
 
-exports.getScreams = functions.https.onRequest((req, res) => {
+app.get("/screams", (req, res) => {
   admin
     .firestore()
     .collection("screams")
