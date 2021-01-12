@@ -64,7 +64,21 @@ app.post("/scream", (req, res) => {
 app.post("/signup", (req, res) => {
   const newUser = {
     email: req.body.email,
+    password: req.body.password,
+    confirmPassword: req.body.confirmPassword,
+    handle: req.body.handle,
   };
+
+  // TODO: validate data
+
+  firebase
+    .auth()
+    .createUserWithEmailAndPassword(newUser.email, newUser.password)
+    .then((data) => {
+      return res
+        .status(201)
+        .json({ message: `user ${data.user.uid} signed up successfully` });
+    });
 });
 
 exports.api = functions.region("europe-west1").https.onRequest(app);
