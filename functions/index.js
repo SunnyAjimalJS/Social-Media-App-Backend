@@ -4,6 +4,8 @@ const app = require("express")();
 
 admin.initializeApp();
 
+const db = admin.firestore();
+
 const config = {
   apiKey: "AIzaSyClJdQl77TVrlDAvXjCfBOuvZqiFOBS_GI",
   authDomain: "socialape-62ab3.firebaseapp.com",
