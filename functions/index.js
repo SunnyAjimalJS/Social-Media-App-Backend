@@ -1,5 +1,6 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
+const app = require("express")();
 
 admin.initializeApp();
 
@@ -14,9 +15,6 @@ const config = {
   appId: "1:167455888246:web:6457cc706eb8d9eac16057",
   measurementId: "G-P76FMHSQER",
 };
-
-const express = require("express");
-const app = express();
 
 const firebase = require("firebase");
 firebase.initializeApp(config);
@@ -61,5 +59,8 @@ app.post("/scream", (req, res) => {
       console.error(err);
     });
 });
+
+// Signup route
+app.post("/signup", (req, res));
 
 exports.api = functions.region("europe-west1").https.onRequest(app);
