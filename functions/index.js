@@ -61,6 +61,10 @@ app.post("/scream", (req, res) => {
 });
 
 // Signup route
-app.post("/signup", (req, res));
+app.post("/signup", (req, res) => {
+  const newUser = {
+    email: req.body.email,
+  };
+});
 
 exports.api = functions.region("europe-west1").https.onRequest(app);
