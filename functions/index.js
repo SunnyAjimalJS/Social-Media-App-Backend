@@ -78,6 +78,10 @@ app.post("/signup", (req, res) => {
       return res
         .status(201)
         .json({ message: `user ${data.user.uid} signed up successfully` });
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).json({ error: err.code });
     });
 });
 
