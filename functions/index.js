@@ -68,18 +68,26 @@ app.post("/signup", (req, res) => {
   };
 
   // TODO: validate data
-
-  firebase
-    .auth()
-    .createUserWithEmailAndPassword(newUser.email, newUser.password)
+  db.doc(`/users/${newUser.handle}`)
+    .get()
+    .then((doc) => {
+      if (doc.exists) {
+        return res.status(400).json({ handle: "this handle is already taken" });
+      } else {
+        return firebase
+          .auth()
+          .createUserWithEmailAndPassword(newUser.email, newUser.password);
+      }
+    })
     .then((data) => {
-      return res
-        .status(201)
-        .json({ message: `user ${data.user.uid} signed up successfully` });
+      return data.user.getIdToken();
+    })
+    .then((token) => {
+      return res.status(201).json({ token });
     })
     .catch((err) => {
       console.error(err);
-      res.status(500).json({ error: err.code });
+      return res.status(500).json({ error: err.code });
     });
 });
 
