@@ -6,6 +6,7 @@ admin.initializeApp();
 
 const db = admin.firestore();
 
+// Firebase config:
 const config = {
   apiKey: "AIzaSyClJdQl77TVrlDAvXjCfBOuvZqiFOBS_GI",
   authDomain: "socialape-62ab3.firebaseapp.com",
@@ -21,6 +22,7 @@ const config = {
 const firebase = require("firebase");
 firebase.initializeApp(config);
 
+// GET data from firebase collection:
 app.get("/screams", (req, res) => {
   db.collection("screams")
     .orderBy("createdAt", "desc")
@@ -40,6 +42,7 @@ app.get("/screams", (req, res) => {
     .catch((err) => console.error(err));
 });
 
+// POST data to firebase collection:
 app.post("/scream", (req, res) => {
   const newScream = {
     body: req.body.body,
@@ -58,18 +61,20 @@ app.post("/scream", (req, res) => {
     });
 });
 
+// Helper function to validate emails client side:
 const isEmail = (email) => {
   const regEx = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   if (email.match(regEx)) return true;
   else return false;
 };
 
+// Helper function to check if a field is empty client side:
 const isEmpty = (string) => {
   if (string.trim() === "") return true;
   else return false;
 };
 
-// Signup route
+// Signup route:
 app.post("/signup", (req, res) => {
   const newUser = {
     email: req.body.email,
@@ -80,17 +85,19 @@ app.post("/signup", (req, res) => {
 
   let errors = {};
 
+  // Email Validation:
   if (isEmpty(newUser.email)) {
     errors.email = "Must not be empty";
   } else if (!isEmail(newUser.email)) {
     errors.email = "Must be a valid email";
   }
 
+  // Password Validation:
   if (isEmpty(newUser.password)) errors.password = "Must not be empty";
   if (newUser.password !== newUser.confirmPassword)
     errors.confirmPassword = "Passwords must match";
 
-  // TODO: validate data
+  // Validating and creating new data/users server side:
   let token, userId;
   db.doc(`/users/${newUser.handle}`)
     .get()
