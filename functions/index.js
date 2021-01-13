@@ -89,7 +89,7 @@ app.post("/signup", (req, res) => {
   if (isEmpty(newUser.email)) {
     errors.email = "Must not be empty";
   } else if (!isEmail(newUser.email)) {
-    errors.email = "Must be a valid email";
+    errors.email = "Must be a valid Email";
   }
 
   // Password Validation:
