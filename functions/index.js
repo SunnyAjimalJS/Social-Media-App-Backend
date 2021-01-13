@@ -97,6 +97,12 @@ app.post("/signup", (req, res) => {
   if (newUser.password !== newUser.confirmPassword)
     errors.confirmPassword = "Passwords must match";
 
+  // Handle/username Validation:
+  if (isEmpty(newUser.handle)) errors.handle = "Must not be empty";
+
+  // Checking the errors object on the client side :
+  if (Object.keys(errors).length > 0) return res.status(400).json({ errors });
+
   // Validating and creating new data/users server side:
   let token, userId;
   db.doc(`/users/${newUser.handle}`)
