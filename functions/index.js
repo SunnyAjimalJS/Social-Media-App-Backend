@@ -58,6 +58,11 @@ app.post("/scream", (req, res) => {
     });
 });
 
+const isEmpty = (string) => {
+  if (string.trim() === "") return true;
+  else return false;
+};
+
 // Signup route
 app.post("/signup", (req, res) => {
   const newUser = {
@@ -66,6 +71,10 @@ app.post("/signup", (req, res) => {
     confirmPassword: req.body.confirmPassword,
     handle: req.body.handle,
   };
+
+  let errors = {};
+
+  if(isEmpty(newUser.email))
 
   // TODO: validate data
   let token, userId;
