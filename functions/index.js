@@ -87,6 +87,8 @@ app.post("/signup", (req, res) => {
   }
 
   if (isEmpty(newUser.password)) errors.password = "Must not be empty";
+  if (newUser.password !== newUser.confirmPassword)
+    errors.confirmPassword = "Passwords must match";
 
   // TODO: validate data
   let token, userId;
