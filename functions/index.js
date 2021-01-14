@@ -43,9 +43,18 @@ app.get("/screams", (req, res) => {
 });
 
 // FBAuth (Firebase Auth check) function:
+const FBAuth = (req, res, next) => {
+  let idToken;
+  if (
+    res.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer ")
+  ) {
+    idToken = req.headers.authorization.split("Bearer ")[1];
+  }
+};
 
 // POST a scream/data to firebase collection:
-app.post("/scream", (req, res) => {
+app.post("/scream", FBAuth, (req, res) => {
   const newScream = {
     body: req.body.body,
     userHandle: req.body.userHandle,
