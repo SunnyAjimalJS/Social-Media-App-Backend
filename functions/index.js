@@ -22,7 +22,7 @@ const config = {
 const firebase = require("firebase");
 firebase.initializeApp(config);
 
-// GET data from firebase collection:
+// GET data/screams from firebase collection:
 app.get("/screams", (req, res) => {
   db.collection("screams")
     .orderBy("createdAt", "desc")
@@ -42,7 +42,9 @@ app.get("/screams", (req, res) => {
     .catch((err) => console.error(err));
 });
 
-// POST data to firebase collection:
+// FBAuth (Firebase Auth check) function:
+
+// POST a scream/data to firebase collection:
 app.post("/scream", (req, res) => {
   const newScream = {
     body: req.body.body,
