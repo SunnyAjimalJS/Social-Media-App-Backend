@@ -74,7 +74,7 @@ const isEmpty = (string) => {
   else return false;
 };
 
-// Signup route:
+// Signup Route:
 app.post("/signup", (req, res) => {
   const newUser = {
     email: req.body.email,
@@ -100,7 +100,7 @@ app.post("/signup", (req, res) => {
   // Handle/username Validation:
   if (isEmpty(newUser.handle)) errors.handle = "Must not be empty";
 
-  // Checking the errors object on the client side :
+  // Checking the errors object on the client side:
   if (Object.keys(errors).length > 0) return res.status(400).json({ errors });
 
   // Validating and creating new data/users server side:
@@ -141,6 +141,14 @@ app.post("/signup", (req, res) => {
         return res.status(500).json({ error: err.code });
       }
     });
+});
+
+// Login Route
+app.post("/login", (req, res) => {
+  const user = {
+    email: req.body.email,
+    password: req.body.password,
+  };
 });
 
 exports.api = functions.region("europe-west1").https.onRequest(app);
