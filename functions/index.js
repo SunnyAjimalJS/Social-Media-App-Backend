@@ -159,6 +159,7 @@ app.post("/login", (req, res) => {
   // Checking the errors object on the client side:
   if (Object.keys(errors).length > 0) return res.status(400).json({ errors });
 
+  // Logging in with firebase:
   firebase
     .auth()
     .signInWithEmailAndPassword(user.email, user.password)
@@ -170,7 +171,11 @@ app.post("/login", (req, res) => {
     })
     .catch((err) => {
       console.error(err);
-      return res.status(500).json({ error: error.code });
+      if (err.code === "auth/wrong-password") {
+        return res
+          .status(403)
+          .json({ general: "Wrong credentials, please try again" });
+      } else return res.status(500).json({ error: err.code });
     });
 });
 
