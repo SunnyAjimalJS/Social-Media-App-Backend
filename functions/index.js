@@ -149,6 +149,12 @@ app.post("/login", (req, res) => {
     email: req.body.email,
     password: req.body.password,
   };
+
+  let errors = {};
+
+  // Field validation to not allow empty fields:
+  if (isEmpty(user.email)) errors.email = "Must not be empty";
+  if (isEmpty(user.password)) errors.password = "Must not be empty";
 });
 
 exports.api = functions.region("europe-west1").https.onRequest(app);
