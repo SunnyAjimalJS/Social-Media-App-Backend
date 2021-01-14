@@ -50,6 +50,9 @@ const FBAuth = (req, res, next) => {
     req.headers.authorization.startsWith("Bearer ")
   ) {
     idToken = req.headers.authorization.split("Bearer ")[1];
+  } else {
+    console.error("No Token Found");
+    return response.status(403).json({ error: "Unauthorized" });
   }
 };
 
