@@ -1,6 +1,8 @@
 const functions = require("firebase-functions");
 const app = require("express")();
 
+const { getAllScreams } = require("./handlers/screams");
+
 // Firebase config:
 const config = {
   apiKey: "AIzaSyClJdQl77TVrlDAvXjCfBOuvZqiFOBS_GI",
@@ -18,24 +20,7 @@ const firebase = require("firebase");
 firebase.initializeApp(config);
 
 // GET data/screams from firebase collection:
-app.get("/screams", (req, res) => {
-  db.collection("screams")
-    .orderBy("createdAt", "desc")
-    .get()
-    .then((data) => {
-      let screams = [];
-      data.forEach((doc) => {
-        screams.push({
-          screamId: doc.id,
-          body: doc.data().body,
-          userHandle: doc.data().userHandle,
-          createdAt: doc.data().createdAt,
-        });
-      });
-      return res.json(screams);
-    })
-    .catch((err) => console.error(err));
-});
+app.get("/screams", getAllScreams);
 
 // FBAuth (Firebase Auth check) middleware function:
 const FBAuth = (req, res, next) => {

@@ -1,4 +1,4 @@
-import db from "../util/admin";
+const { db } = require("../util/admin");
 
 exports.getAllScreams = (req, res) => {
   db.collection("screams")
