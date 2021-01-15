@@ -13,26 +13,6 @@ exports.signup = (req, res) => {
     handle: req.body.handle,
   };
 
-  let errors = {};
-
-  // Email Validation:
-  if (isEmpty(newUser.email)) {
-    errors.email = "Must not be empty";
-  } else if (!isEmail(newUser.email)) {
-    errors.email = "Must be a valid Email";
-  }
-
-  // Password Validation:
-  if (isEmpty(newUser.password)) errors.password = "Must not be empty";
-  if (newUser.password !== newUser.confirmPassword)
-    errors.confirmPassword = "Passwords must match";
-
-  // Handle/username Validation:
-  if (isEmpty(newUser.handle)) errors.handle = "Must not be empty";
-
-  // Checking the errors object on the client side:
-  if (Object.keys(errors).length > 0) return res.status(400).json({ errors });
-
   // Validating and creating new data/users server side:
   let token, userId;
   db.doc(`/users/${newUser.handle}`)

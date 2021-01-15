@@ -15,17 +15,4 @@ app.post("/scream", FBAuth, postOneScream); //POST a scream/data to firebase col
 app.post("/signup", signup); //Signup Route.
 app.post("/login", login); //Login Route.
 
-// Helper function to validate emails client side:
-const isEmail = (email) => {
-  const regEx = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  if (email.match(regEx)) return true;
-  else return false;
-};
-
-// Helper function to check if a field is empty client side:
-const isEmpty = (string) => {
-  if (string.trim() === "") return true;
-  else return false;
-};
-
 exports.api = functions.region("europe-west1").https.onRequest(app);
