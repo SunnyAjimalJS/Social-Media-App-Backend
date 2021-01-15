@@ -1,10 +1,6 @@
 const functions = require("firebase-functions");
 const app = require("express")();
 
-admin.initializeApp();
-
-const db = admin.firestore();
-
 // Firebase config:
 const config = {
   apiKey: "AIzaSyClJdQl77TVrlDAvXjCfBOuvZqiFOBS_GI",
