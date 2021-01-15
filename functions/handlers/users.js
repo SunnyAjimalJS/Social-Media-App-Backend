@@ -1,3 +1,10 @@
+const { db } = require("../util/admin");
+const firebase = require("firebase");
+
+const config = require("../util/config");
+
+firebase.initalizeApp(config);
+
 exports.signup = (req, res) => {
   const newUser = {
     email: req.body.email,
