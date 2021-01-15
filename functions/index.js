@@ -1,7 +1,7 @@
 const functions = require("firebase-functions");
 const app = require("express")();
 
-const { getAllScreams } = require("./handlers/screams");
+const { getAllScreams, postOneScream } = require("./handlers/screams");
 
 // Firebase config:
 const config = {
@@ -19,8 +19,12 @@ const config = {
 const firebase = require("firebase");
 firebase.initializeApp(config);
 
+// Scream Routes:
 // GET data/screams from firebase collection:
 app.get("/screams", getAllScreams);
+
+// POST a scream/data to firebase collection with FBAuth middleware to check for an auth header:
+app.post("/scream", FBAuth, postOneScream);
 
 // FBAuth (Firebase Auth check) middleware function:
 const FBAuth = (req, res, next) => {
@@ -55,25 +59,6 @@ const FBAuth = (req, res, next) => {
       return response.status(403).json(err);
     });
 };
-
-// POST a scream/data to firebase collection with FBAuth middleware to check for an auth header:
-app.post("/scream", FBAuth, (req, res) => {
-  const newScream = {
-    body: req.body.body,
-    userHandle: req.user.handle,
-    createdAt: new Date().toISOString(),
-  };
-
-  db.collection("screams")
-    .add(newScream)
-    .then((doc) => {
-      res.json({ message: `document ${doc.id} created successfully` });
-    })
-    .catch((err) => {
-      res.status(500).json({ error: "something went wrong" });
-      console.error(err);
-    });
-});
 
 // Helper function to validate emails client side:
 const isEmail = (email) => {
