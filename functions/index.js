@@ -2,6 +2,7 @@ const functions = require("firebase-functions");
 const app = require("express")();
 
 const { getAllScreams, postOneScream } = require("./handlers/screams");
+const { signup } = require("./handlers/users");
 
 // Firebase config:
 const config = {
@@ -20,11 +21,8 @@ const firebase = require("firebase");
 firebase.initializeApp(config);
 
 // Scream Routes:
-// GET data/screams from firebase collection:
-app.get("/screams", getAllScreams);
-
-// POST a scream/data to firebase collection with FBAuth middleware to check for an auth header:
-app.post("/scream", FBAuth, postOneScream);
+app.get("/screams", getAllScreams); //// GET data/screams from firebase collection:
+app.post("/scream", FBAuth, postOneScream); //POST a scream/data to firebase collection with FBAuth middleware to check for an auth header.
 
 // FBAuth (Firebase Auth check) middleware function:
 const FBAuth = (req, res, next) => {
@@ -74,73 +72,7 @@ const isEmpty = (string) => {
 };
 
 // Signup Route:
-app.post("/signup", (req, res) => {
-  const newUser = {
-    email: req.body.email,
-    password: req.body.password,
-    confirmPassword: req.body.confirmPassword,
-    handle: req.body.handle,
-  };
-
-  let errors = {};
-
-  // Email Validation:
-  if (isEmpty(newUser.email)) {
-    errors.email = "Must not be empty";
-  } else if (!isEmail(newUser.email)) {
-    errors.email = "Must be a valid Email";
-  }
-
-  // Password Validation:
-  if (isEmpty(newUser.password)) errors.password = "Must not be empty";
-  if (newUser.password !== newUser.confirmPassword)
-    errors.confirmPassword = "Passwords must match";
-
-  // Handle/username Validation:
-  if (isEmpty(newUser.handle)) errors.handle = "Must not be empty";
-
-  // Checking the errors object on the client side:
-  if (Object.keys(errors).length > 0) return res.status(400).json({ errors });
-
-  // Validating and creating new data/users server side:
-  let token, userId;
-  db.doc(`/users/${newUser.handle}`)
-    .get()
-    .then((doc) => {
-      if (doc.exists) {
-        return res.status(400).json({ handle: "this handle is already taken" });
-      } else {
-        return firebase
-          .auth()
-          .createUserWithEmailAndPassword(newUser.email, newUser.password);
-      }
-    })
-    .then((data) => {
-      userId = data.user.uid;
-      return data.user.getIdToken();
-    })
-    .then((idToken) => {
-      token = idToken;
-      const userCredentials = {
-        handle: newUser.handle,
-        email: newUser.email,
-        createdAt: new Date().toISOString(),
-        userId,
-      };
-      return db.doc(`/users/${newUser.handle}`).set(userCredentials);
-    })
-    .then(() => {
-      return res.status(201).json({ token });
-    })
-    .catch((err) => {
-      console.error(err);
-      if (err.code === "auth/email-already-in-use") {
-        return res.status(400).json({ email: "Email is already in use" });
-      } else {
-        return res.status(500).json({ error: err.code });
-      }
-    });
-});
+app.post("/signup", signup);
 
 // Login Route
 app.post("/login", (req, res) => {
