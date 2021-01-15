@@ -12,7 +12,7 @@ const isEmpty = (string) => {
 };
 
 exports.validateSignupData = (data) => {
-    let errors = {};
+  let errors = {};
 
   // Email Validation:
   if (isEmpty(data.email)) {
@@ -30,7 +30,18 @@ exports.validateSignupData = (data) => {
   if (isEmpty(data.handle)) errors.handle = "Must not be empty";
 
   return {
-      errors,
-      valid: Object.keys(errors).length === 0 ? true : false;
-  }
-}
+    errors,
+    valid: Object.keys(errors).length === 0 ? true : false,
+  };
+};
+
+exports.validateLoginData = (data) => {
+  // Field validation to not allow empty fields:
+  if (isEmpty(user.email)) errors.email = "Must not be empty";
+  if (isEmpty(user.password)) errors.password = "Must not be empty";
+
+  return {
+    errors,
+    valid: Object.keys(errors).length === 0 ? true : false,
+  };
+};

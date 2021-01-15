@@ -3,7 +3,9 @@ const firebase = require("firebase");
 
 const config = require("../util/config");
 
-firebase.initalizeApp(config);
+firebase.initializeApp(config);
+
+const { validateSignupData } = require("../util/validators");
 
 exports.signup = (req, res) => {
   const newUser = {
@@ -12,6 +14,10 @@ exports.signup = (req, res) => {
     confirmPassword: req.body.confirmPassword,
     handle: req.body.handle,
   };
+
+  const { valid, errors } = validateSignupData(newUser);
+
+  if (!valid) return res.status(400).json({ errors });
 
   // Validating and creating new data/users server side:
   let token, userId;
@@ -59,14 +65,9 @@ exports.login = (req, res) => {
     password: req.body.password,
   };
 
-  let errors = {};
+  const { valid, errors } = validateLoginData(user);
 
-  // Field validation to not allow empty fields:
-  if (isEmpty(user.email)) errors.email = "Must not be empty";
-  if (isEmpty(user.password)) errors.password = "Must not be empty";
-
-  // Checking the errors object on the client side:
-  if (Object.keys(errors).length > 0) return res.status(400).json({ errors });
+  if (!valid) return res.status(400).json({ errors });
 
   // Logging in with firebase:
   firebase
@@ -86,4 +87,4 @@ exports.login = (req, res) => {
           .json({ general: "Wrong credentials, please try again" });
       } else return res.status(500).json({ error: err.code });
     });
-}
+};

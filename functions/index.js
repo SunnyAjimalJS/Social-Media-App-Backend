@@ -1,17 +1,16 @@
 const functions = require("firebase-functions");
 const app = require("express")();
 
+const FBAuth = require("./util/fbAuth");
+
 const { getAllScreams, postOneScream } = require("./handlers/screams");
 const { signup, login } = require("./handlers/users");
-
-const firebase = require("firebase");
-firebase.initializeApp(config);
 
 // Screams Routes:
 app.get("/screams", getAllScreams); //GET data/screams from firebase collection.
 app.post("/scream", FBAuth, postOneScream); //POST a scream/data to firebase collection with FBAuth middleware to check for an auth header.
 
-// Users Routes: 
+// Users Routes:
 app.post("/signup", signup); //Signup Route.
 app.post("/login", login); //Login Route.
 
