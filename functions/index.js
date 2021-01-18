@@ -7,7 +7,7 @@ const { getAllScreams, postOneScream } = require("./handlers/screams");
 const { signup, login } = require("./handlers/users");
 
 // Screams Routes:
-app.get("/screams", getAllScreams); //GET data/screams from firebase collection.
+app.get("/screams", getAllScreams); //GET data/all screams from firebase collection.
 app.post("/scream", FBAuth, postOneScream); //POST a scream/data to firebase collection with FBAuth middleware to check for an auth header.
 
 // Users Routes:
