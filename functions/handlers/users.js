@@ -115,13 +115,23 @@ exports.uploadImage = (req, res) => {
   });
 
   busboy.on("finish", () => {
-    admin.storage().bucket(config.storageBucket).upload(imageToBeUploaded.filepath, {
-      resumable, 
-      metadata = {
+    admin
+      .storage()
+      .bucket(config.storageBucket)
+      .upload(imageToBeUploaded.filepath, {
+        resumable,
         metadata: {
-          contentType: imageToBeUploaded.mimetype
-        }
-      }
-    })
+          metadata: {
+            contentType: imageToBeUploaded.mimetype,
+          },
+        },
+      })
+      .then(() => {
+        const imageUrl = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media`;
+        return db.doc(`/users/${req.user.handle}`).update({ imageUrl });
+      })
+      .then(() => {
+        return res.json({ message: "Image uploaded successfully" });
+      });
   });
 };

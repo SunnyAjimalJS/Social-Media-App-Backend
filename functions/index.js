@@ -13,6 +13,6 @@ app.post("/scream", FBAuth, postOneScream); //POST a scream/data to firebase col
 // Users Routes:
 app.post("/signup", signup); //Signup Route.
 app.post("/login", login); //Login Route.
-app.post("user/image", uploadImage); //Uploading a user image route
+app.post("user/image", FBAuth, uploadImage); //Uploading a user image route
 
 exports.api = functions.region("europe-west1").https.onRequest(app);
