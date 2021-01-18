@@ -89,4 +89,13 @@ exports.login = (req, res) => {
     });
 };
 
-exports.uploadImage = (req, res) => {};
+exports.uploadImage = (req, res) => {
+  const BusBoy = require("busboy");
+  const path = require("path");
+  const os = require("os");
+  const fs = require("fs");
+
+  const busboy = new BusBoy({ header: req.headers });
+
+  busboy.on("file", (fieldname, file, filename, encoding, mimetype) => {});
+};
