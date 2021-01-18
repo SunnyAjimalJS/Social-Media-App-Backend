@@ -1,4 +1,4 @@
-const { db } = require("../util/admin");
+const { db, admin } = require("../util/admin");
 const firebase = require("firebase");
 
 const config = require("../util/config");
@@ -97,11 +97,31 @@ exports.uploadImage = (req, res) => {
 
   const busboy = new BusBoy({ header: req.headers });
 
+  let imageFileName;
+  let imageToBeUploaded = {};
+
   busboy.on("file", (fieldname, file, filename, encoding, mimetype) => {
+    console.log(fieldname);
+    console.log(filename);
+    console.log(mimetype);
+
     const imageExtenstion = filename.split(".")[filename.split(".").length - 1];
-    const imageFileName = `${Math.round(
+    imageFileName = `${Math.round(
       Math.random() * 10000000
     )}.${imageExtenstion}`;
-    const filepath = path.join(os.tmpdir());
+    const filepath = path.join(os.tmpdir(), imageFileName);
+    imageToBeUploaded = { filepath, mimetype };
+    file.pipe(fs.createWriteStream(filepath));
+  });
+
+  busboy.on("finish", () => {
+    admin.storage().bucket(config.storageBucket).upload(imageToBeUploaded.filepath, {
+      resumable, 
+      metadata = {
+        metadata: {
+          contentType: imageToBeUploaded.mimetype
+        }
+      }
+    })
   });
 };
