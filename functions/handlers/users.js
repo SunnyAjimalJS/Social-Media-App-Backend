@@ -132,6 +132,10 @@ exports.uploadImage = (req, res) => {
       })
       .then(() => {
         return res.json({ message: "Image uploaded successfully" });
+      })
+      .catch((err) => {
+        console.error(err);
+        return res.status(500).json({ error: err.code });
       });
   });
 };
