@@ -15,11 +15,15 @@ exports.signup = (req, res) => {
     handle: req.body.handle,
   };
 
+  // Validating signup data:
   const { valid, errors } = validateSignupData(newUser);
 
   if (!valid) return res.status(400).json({ errors });
 
-  // Validating and creating new data/users server side:
+  // Blank profile image auto attach:
+  const noImg = "no-img.png";
+
+  // Creating new data/users server side:
   let token, userId;
   db.doc(`/users/${newUser.handle}`)
     .get()
@@ -42,6 +46,7 @@ exports.signup = (req, res) => {
         handle: newUser.handle,
         email: newUser.email,
         createdAt: new Date().toISOString(),
+        imageUrl: `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${noImg}?alt=media`,
         userId,
       };
       return db.doc(`/users/${newUser.handle}`).set(userCredentials);
@@ -95,15 +100,15 @@ exports.uploadImage = (req, res) => {
   const os = require("os");
   const fs = require("fs");
 
-  const busboy = new BusBoy({ header: req.headers });
+  const busboy = new BusBoy({ headers: req.headers });
 
   let imageFileName;
   let imageToBeUploaded = {};
 
   busboy.on("file", (fieldname, file, filename, encoding, mimetype) => {
-    console.log(fieldname);
-    console.log(filename);
-    console.log(mimetype);
+    if (mimetype !== "image/jpeg" && mimetype !== "image/png") {
+      return res.status(400).json({ message: "Wrong file type submitted" });
+    }
 
     const imageExtenstion = filename.split(".")[filename.split(".").length - 1];
     imageFileName = `${Math.round(
@@ -119,10 +124,10 @@ exports.uploadImage = (req, res) => {
       .storage()
       .bucket(config.storageBucket)
       .upload(imageToBeUploaded.filepath, {
-        resumable,
+        resumable: false,
         metadata: {
           metadata: {
-            contentType: imageToBeUploaded.mimetype,
+            "content-Type": imageToBeUploaded.mimetype,
           },
         },
       })
@@ -138,4 +143,5 @@ exports.uploadImage = (req, res) => {
         return res.status(500).json({ error: err.code });
       });
   });
+  busboy.end(req.rawBody);
 };
