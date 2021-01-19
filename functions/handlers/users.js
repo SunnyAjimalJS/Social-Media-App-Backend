@@ -103,6 +103,16 @@ exports.login = (req, res) => {
 // Add user profile details handler:
 exports.addUserDetails = (req, res) => {
   let userDetails = reduceUserDetails(req.body);
+
+  db.doc(`/users/${req.user.handle}`)
+    .update(userDetails)
+    .then(() => {
+      return res.json({ message: "Details added successfully" });
+    })
+    .catch((err) => {
+      console.error(err);
+      return res.status(500).json({ error: err.code });
+    });
 };
 
 // Upload a user profile image handler:

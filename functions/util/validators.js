@@ -36,6 +36,7 @@ exports.validateSignupData = (data) => {
 };
 
 exports.validateLoginData = (data) => {
+  let errors = {};
   // Field validation to not allow empty fields:
   if (isEmpty(data.email)) errors.email = "Must not be empty";
   if (isEmpty(data.password)) errors.password = "Must not be empty";
