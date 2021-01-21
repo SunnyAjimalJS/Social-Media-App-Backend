@@ -115,6 +115,17 @@ exports.addUserDetails = (req, res) => {
     });
 };
 
+// Getting and accessing user profile details handler:
+exports.getAuthenticatedUser = (req, res) => {
+  let resData = {};
+  db.doc(`/users/${req.user.handle}`)
+    .get()
+    .then((doc) => {
+      if (doc.exists) {
+      }
+    });
+};
+
 // Upload a user profile image handler:
 exports.uploadImage = (req, res) => {
   const BusBoy = require("busboy");

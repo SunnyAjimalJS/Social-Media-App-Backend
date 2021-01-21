@@ -9,6 +9,7 @@ const {
   login,
   uploadImage,
   addUserDetails,
+  getAuthenticatedUser,
 } = require("./handlers/users");
 
 // Scream Routes:
