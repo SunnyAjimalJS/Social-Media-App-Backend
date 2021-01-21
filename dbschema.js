@@ -24,7 +24,7 @@ let db = {
   ],
 };
 
-const userDetails = {
+const userData = {
   // Redux Data
   credentials: {
     userId: "cOpC6RJLfialVbGEd22x6XUiYVw1",
