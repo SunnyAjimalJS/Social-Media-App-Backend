@@ -142,7 +142,7 @@ exports.getAuthenticatedUser = (req, res) => {
     });
 };
 
-// Upload a user profile image handler:
+// Upload a user profile image handler using BusBoy:
 exports.uploadImage = (req, res) => {
   const BusBoy = require("busboy");
   const path = require("path");

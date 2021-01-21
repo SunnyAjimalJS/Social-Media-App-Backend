@@ -1,5 +1,6 @@
 const { db } = require("../util/admin");
 
+// Get all screams from all users handle:
 exports.getAllScreams = (req, res) => {
   db.collection("screams")
     .orderBy("createdAt", "desc")
@@ -19,6 +20,7 @@ exports.getAllScreams = (req, res) => {
     .catch((err) => console.error(err));
 };
 
+// Create a scream handler:
 exports.postOneScream = (req, res) => {
   const newScream = {
     body: req.body.body,
