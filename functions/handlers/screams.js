@@ -53,13 +53,13 @@ exports.getScream = (req, res) => {
       screamData.screamId = doc.id;
 
       return db
-        .collection("commments")
+        .collection("comments")
         .where("screamId", "==", req.params.screamId)
         .get()
         .then((data) => {
           screamData.comments = [];
           data.forEach((doc) => {
-            screamData.push(doc.data());
+            screamData.comments.push(doc.data());
           });
           return res.json(screamData);
         })
