@@ -56,6 +56,16 @@ exports.getScream = (req, res) => {
         .collection("commments")
         .where("screamId", "==", req.params.screamId)
         .get()
-        .then((data) => {});
+        .then((data) => {
+          screamData.comments = [];
+          data.forEach((doc) => {
+            screamData.push(doc.data());
+          });
+          return res.json(screamData);
+        })
+        .catch((err) => {
+          console.error(err);
+          res.status(500).json({ error: err.code });
+        });
     });
 };
