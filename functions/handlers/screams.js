@@ -38,3 +38,6 @@ exports.postOneScream = (req, res) => {
       console.error(err);
     });
 };
+
+// Get one scream's data handler:
+exports.getScream = (req, res) => {};

@@ -25,7 +25,7 @@ let db = {
   comments: [
     {
       userHandle: "user",
-      screamId: "adakDFNASMdfnkskajd",
+      screamId: "0KRkPzUEK3p7fqmIBBcq",
       body: "Great scream! Worth a read.",
       createdAt: "2021-01-11T13:17:06.650Z",
     },
