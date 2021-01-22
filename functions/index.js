@@ -1,9 +1,12 @@
 const functions = require("firebase-functions");
 const app = require("express")();
-
 const FBAuth = require("./util/fbAuth");
 
-const { getAllScreams, postOneScream } = require("./handlers/screams");
+const {
+  getAllScreams,
+  postOneScream,
+  getScream,
+} = require("./handlers/screams");
 const {
   signup,
   login,
@@ -15,6 +18,11 @@ const {
 // Scream Routes:
 app.get("/screams", getAllScreams); // GET data/all screams from firebase collection
 app.post("/scream", FBAuth, postOneScream); // POST a scream/data to firebase collection with FBAuth (Firebase Auth) middleware to check for an auth header
+app.get("/scream/:screamId", getScream); // GET route to get data from one scream/post
+// TODO: deleting a scream
+// TODO: like a scream
+// TODO: unliking a scream
+// TODO: comment on scream
 
 // User Routes:
 app.post("/signup", signup); // POST route to provide login data and Signup

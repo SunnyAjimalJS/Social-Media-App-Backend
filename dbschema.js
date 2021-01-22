@@ -22,6 +22,14 @@ let db = {
       commentCount: 2,
     },
   ],
+  comments: [
+    {
+      userHandle: "user",
+      screamId: "adakDFNASMdfnkskajd",
+      body: "Great scream! Worth a read.",
+      createdAt: "2021-01-11T13:17:06.650Z",
+    },
+  ],
 };
 
 const userData = {
