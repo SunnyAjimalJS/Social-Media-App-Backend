@@ -77,9 +77,9 @@ exports.commentOnScream = (req, res) => {
     return res.status(400).json({ error: "Must not be empty" });
 
   const newComment = {
-    body: request.body.body,
+    body: req.body.body,
     createdAt: new Date().toISOString(),
-    screamID: req.params.screamId,
+    screamId: req.params.screamId,
     userHandle: req.user.handle,
     userImage: req.user.imageUrl,
   };
@@ -94,5 +94,9 @@ exports.commentOnScream = (req, res) => {
     })
     .then(() => {
       res.json(newComment);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).json({ error: "Something went wrong" });
     });
 };
