@@ -1,11 +1,12 @@
 const functions = require("firebase-functions");
 const app = require("express")();
-const FBAuth = require("./util/fbAuth");
+const FBAuth = require("./util/fbAuth"); // Firebase Auth middleware to check for an auth token
 
 const {
   getAllScreams,
   postOneScream,
   getScream,
+  commentOnScream,
 } = require("./handlers/screams");
 const {
   signup,
@@ -15,16 +16,16 @@ const {
   getAuthenticatedUser,
 } = require("./handlers/users");
 
-// Scream Routes:
-app.get("/screams", getAllScreams); // GET data/all screams from firebase collection
-app.post("/scream", FBAuth, postOneScream); // POST a scream/data to firebase collection with FBAuth (Firebase Auth) middleware to check for an auth header
-app.get("/scream/:screamId", getScream); // GET route to get data from one scream/post
+// Scream Routes for Firebase (screams are posts by users):
+app.get("/screams", getAllScreams); // GET data/all screams
+app.post("/scream", FBAuth, postOneScream); // POST route to create a scream
+app.get("/scream/:screamId", getScream); // GET route to get data from one scream
+app.post("/scream/:screamId/comment", FBAuth, commentOnScream); // POST route to create a comment on a scream
 // TODO: deleting a scream
 // TODO: like a scream
 // TODO: unliking a scream
-// TODO: comment on scream
 
-// User Routes:
+// User Routes for Firebase:
 app.post("/signup", signup); // POST route to provide login data and Signup
 app.post("/login", login); // POST route to login using user credentials and obtain an Auth Token for FBAuth (Firebase Auth) middleware
 app.post("/user/image", FBAuth, uploadImage); // POST route to upload a user image
