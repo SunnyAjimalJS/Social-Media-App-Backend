@@ -54,6 +54,7 @@ exports.getScream = (req, res) => {
 
       return db
         .collection("comments")
+        .orderBy("createdAt", "desc")
         .where("screamId", "==", req.params.screamId)
         .get()
         .then((data) => {
