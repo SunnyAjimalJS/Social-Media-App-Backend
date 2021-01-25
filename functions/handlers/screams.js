@@ -70,3 +70,6 @@ exports.getScream = (req, res) => {
         });
     });
 };
+
+// Comment on a scream handler:
+exports.commentOnScream = (req, res) => {};
