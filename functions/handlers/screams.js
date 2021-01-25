@@ -72,4 +72,15 @@ exports.getScream = (req, res) => {
 };
 
 // Comment on a scream handler:
-exports.commentOnScream = (req, res) => {};
+exports.commentOnScream = (req, res) => {
+  if (req.body.body.trim() === "")
+    return res.status(400).json({ error: "Must not be empty" });
+
+  const newComment = {
+    body: request.body.body,
+    createdAt: new Date().toISOString(),
+    screamID: req.params.screamId,
+    userHandle: req.user.handle,
+    userImage: req.user.imageUrl,
+  };
+};
