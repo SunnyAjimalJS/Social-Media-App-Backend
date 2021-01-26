@@ -7,6 +7,8 @@ const {
   postOneScream,
   getScream,
   commentOnScream,
+  likeScream,
+  unlikeScream,
 } = require("./handlers/screams");
 const {
   signup,
@@ -21,9 +23,9 @@ app.get("/screams", getAllScreams); // GET data/all screams
 app.post("/scream", FBAuth, postOneScream); // POST route to create a scream
 app.get("/scream/:screamId", getScream); // GET route to get data from one scream
 app.post("/scream/:screamId/comment", FBAuth, commentOnScream); // POST route to create a comment on a scream
+app.get("/scream/:screamId/like", FBAuth, likeScream); // GET route to like a scream
+app.get("/scream/:screamId/unlike", FBAuth, unlikeScream); // GET Route to unline a scream
 // TODO: deleting a scream
-// TODO: like a scream
-// TODO: unliking a scream
 
 // User Routes for Firebase:
 app.post("/signup", signup); // POST route to provide login data and Signup
