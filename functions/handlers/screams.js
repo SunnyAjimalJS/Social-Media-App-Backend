@@ -154,6 +154,7 @@ exports.likeScream = (req, res) => {
     });
 };
 
+// Unlike a scream:
 exports.unlikeScream = (req, res) => {
   const likeDocument = db
     .collection("likes")
