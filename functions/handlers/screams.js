@@ -1,6 +1,6 @@
 const { db } = require("../util/admin");
 
-// Get all screams from all users handle:
+// Get all screams from all users:
 exports.getAllScreams = (req, res) => {
   db.collection("screams")
     .orderBy("createdAt", "desc")
@@ -20,7 +20,7 @@ exports.getAllScreams = (req, res) => {
     .catch((err) => console.error(err));
 };
 
-// Create a scream handler:
+// Create a scream:
 exports.postOneScream = (req, res) => {
   const newScream = {
     body: req.body.body,
@@ -44,7 +44,7 @@ exports.postOneScream = (req, res) => {
     });
 };
 
-// Get one scream's data handler:
+// Get one scream's data:
 exports.getScream = (req, res) => {
   let screamData = {};
 
@@ -76,7 +76,7 @@ exports.getScream = (req, res) => {
     });
 };
 
-// Comment on a scream handler:
+// Comment on a scream:
 exports.commentOnScream = (req, res) => {
   if (req.body.body.trim() === "")
     return res.status(400).json({ error: "Must not be empty" });
@@ -104,4 +104,15 @@ exports.commentOnScream = (req, res) => {
       console.error(err);
       res.status(500).json({ error: "Something went wrong" });
     });
+};
+
+// Like a scream:
+exports.likeScream = (req, res) => {
+  const likeDocument = db
+    .collection("likes")
+    .where("userHandle", "==", req.user.handle)
+    .where("screamId", "==", req.params.screamId)
+    .limit(1);
+
+  const screamDocument = db.doc(`/screams/${req.params.screamId}`);
 };
