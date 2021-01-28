@@ -2,6 +2,8 @@ const functions = require("firebase-functions");
 const app = require("express")();
 const FBAuth = require("./util/fbAuth"); // Firebase Auth middleware to check for an auth token
 
+const { db } = require("./util/admin");
+
 const {
   getAllScreams,
   postOneScream,
@@ -39,4 +41,13 @@ exports.api = functions.region("europe-west1").https.onRequest(app);
 
 exports.createNotificationOnLike = functions
   .region("europe-west1")
-  .firestore.document("likes/{id}");
+  .firestore.document("likes/{id}")
+  .onCreate((snapshot) => {
+    db.doc(`/screams/${snapshot.data().screamId}`)
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          return db.doc(`/notifications/${snapshot.id}`).set({});
+        }
+      });
+  });
