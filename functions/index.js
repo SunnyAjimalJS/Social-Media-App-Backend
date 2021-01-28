@@ -36,3 +36,7 @@ app.post("/user", FBAuth, addUserDetails); // POST route to add user profile det
 app.get("/user", FBAuth, getAuthenticatedUser); // GET route to get and access user data once logged in
 
 exports.api = functions.region("europe-west1").https.onRequest(app);
+
+exports.createNotificationOnLike = functions
+  .region("europe-west1")
+  .firestore.document("likes/{id}");
