@@ -84,7 +84,7 @@ exports.deleteNotificationOnUnLike = functions
 exports.createNotificationOnComment = functions
   .region("europe-west1")
   .firestore.document("comments/{id}")
-  .then((snapshot) => {
+  .onCreate((snapshot) => {
     db.doc(`/screams/${snapshot.data().screamId}`)
       .get()
       .then((doc) => {
