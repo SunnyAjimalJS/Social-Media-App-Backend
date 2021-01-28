@@ -65,3 +65,7 @@ exports.createNotificationOnLike = functions
         return;
       });
   });
+
+exports.createNotificationOnComment = functions
+  .region("europe-west1")
+  .firestore.document("comments/{id}");
