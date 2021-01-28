@@ -47,7 +47,21 @@ exports.createNotificationOnLike = functions
       .get()
       .then((doc) => {
         if (doc.exists) {
-          return db.doc(`/notifications/${snapshot.id}`).set({});
+          return db.doc(`/notifications/${snapshot.id}`).set({
+            createAt: new Date().toISOString(),
+            receipient: doc.data().userhandle,
+            sender: snapshot.data().userhandle,
+            type: "like",
+            read: false,
+            screamId: doc.id,
+          });
         }
+      })
+      .then(() => {
+        return;
+      })
+      .catch((err) => {
+        console.error(err);
+        return;
       });
   });
