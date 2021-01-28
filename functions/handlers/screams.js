@@ -177,7 +177,7 @@ exports.likeScream = (req, res) => {
     })
     .catch((err) => {
       console.error(err);
-      return res.status(500).json({ error: error.code });
+      return res.status(500).json({ error: err.code });
     });
 };
 
