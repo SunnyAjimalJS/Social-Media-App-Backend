@@ -134,8 +134,14 @@ exports.getAuthenticatedUser = (req, res) => {
       data.forEach((doc) => {
         userData.likes.push(doc.data());
       });
-      return res.json({ userData });
+      return db
+        .collection("notifications")
+        .where("recipient", "==", req.user.handle)
+        .orderBy("createdAt", "desc")
+        .limit(10)
+        .get();
     })
+    .then((data) => {})
     .catch((err) => {
       console.error(err);
       return res.status(500).json({ error: err.code });
