@@ -141,7 +141,22 @@ exports.getAuthenticatedUser = (req, res) => {
         .limit(10)
         .get();
     })
-    .then((data) => {})
+    .then((data) => {
+      userData.notifications = [];
+      data.forEach((doc) => {
+        userData.notifications.push({
+          recipient: doc.data().recipient,
+          sender: doc.data().sender,
+          read: doc.data().read,
+          screamId: doc.data().screamId,
+          type: doc.data().type,
+          createdAt: doc.data().createdAt,
+          notificationId: doc.id,
+        });
+      });
+      return res.json(userData);
+    })
+
     .catch((err) => {
       console.error(err);
       return res.status(500).json({ error: err.code });

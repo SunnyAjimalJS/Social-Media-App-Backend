@@ -48,7 +48,7 @@ exports.createNotificationOnLike = functions
       .then((doc) => {
         if (doc.exists) {
           return db.doc(`/notifications/${snapshot.id}`).set({
-            createAt: new Date().toISOString(),
+            createdAt: new Date().toISOString(),
             recipient: doc.data().userHandle,
             sender: snapshot.data().userHandle,
             type: "like",
@@ -90,7 +90,7 @@ exports.createNotificationOnComment = functions
       .then((doc) => {
         if (doc.exists) {
           return db.doc(`/notifications/${snapshot.id}`).set({
-            createAt: new Date().toISOString(),
+            createdAt: new Date().toISOString(),
             recipient: doc.data().userHandle,
             sender: snapshot.data().userHandle,
             type: "comment",
