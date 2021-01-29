@@ -19,6 +19,8 @@ const {
   uploadImage,
   addUserDetails,
   getAuthenticatedUser,
+  getUserDetails,
+  markNotificationsRead,
 } = require("./handlers/users");
 
 // Scream Routes for Firebase (screams are posts by users):
@@ -36,7 +38,10 @@ app.post("/login", login); // POST route to login using user credentials and obt
 app.post("/user/image", FBAuth, uploadImage); // POST route to upload a user image
 app.post("/user", FBAuth, addUserDetails); // POST route to add user profile details
 app.get("/user", FBAuth, getAuthenticatedUser); // GET route to get and access user data once logged in
+app.get("/user/:handle", getUserDetails); // GET route to get a specific user's details by their handle
+app.post("/notifications", markNotificationsRead); // POST route to mark notifications as read by users
 
+// Functions:
 exports.api = functions.region("europe-west1").https.onRequest(app);
 
 exports.createNotificationOnLike = functions
