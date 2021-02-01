@@ -41,17 +41,22 @@ app.get("/user", FBAuth, getAuthenticatedUser); // GET route to get and access u
 app.get("/user/:handle", getUserDetails); // GET route to get a specific user's details by their handle
 app.post("/notifications", FBAuth, markNotificationsRead); // POST route to mark notifications as read by users
 
-// Functions:
+// API function:
 exports.api = functions.region("europe-west1").https.onRequest(app);
 
+// Cloud Firestore Trigger functions for Notifications:
 exports.createNotificationOnLike = functions
   .region("europe-west1")
   .firestore.document("likes/{id}")
   .onCreate((snapshot) => {
-    db.doc(`/screams/${snapshot.data().screamId}`)
+    return db
+      .doc(`/screams/${snapshot.data().screamId}`)
       .get()
       .then((doc) => {
-        if (doc.exists) {
+        if (
+          doc.exists &&
+          doc.data().userHandle !== snapshot.data().userHandle
+        ) {
           return db.doc(`/notifications/${snapshot.id}`).set({
             createdAt: new Date().toISOString(),
             recipient: doc.data().userHandle,
@@ -61,9 +66,6 @@ exports.createNotificationOnLike = functions
             screamId: doc.id,
           });
         }
-      })
-      .then(() => {
-        return;
       })
       .catch((err) => {
         console.error(err);
@@ -75,11 +77,9 @@ exports.deleteNotificationOnUnLike = functions
   .region("europe-west1")
   .firestore.document("likes/{id}")
   .onDelete((snapshot) => {
-    db.doc(`/notifications/${snapshot.id}`)
+    return db
+      .doc(`/notifications/${snapshot.id}`)
       .delete()
-      .then(() => {
-        return;
-      })
       .catch((err) => {
         console.error(err);
         return;
@@ -90,10 +90,14 @@ exports.createNotificationOnComment = functions
   .region("europe-west1")
   .firestore.document("comments/{id}")
   .onCreate((snapshot) => {
-    db.doc(`/screams/${snapshot.data().screamId}`)
+    return db
+      .doc(`/screams/${snapshot.data().screamId}`)
       .get()
       .then((doc) => {
-        if (doc.exists) {
+        if (
+          doc.exists &&
+          doc.data().userHandle !== snapshot.data().userHandle
+        ) {
           return db.doc(`/notifications/${snapshot.id}`).set({
             createdAt: new Date().toISOString(),
             recipient: doc.data().userHandle,
@@ -103,9 +107,6 @@ exports.createNotificationOnComment = functions
             screamId: doc.id,
           });
         }
-      })
-      .then(() => {
-        return;
       })
       .catch((err) => {
         console.error(err);
