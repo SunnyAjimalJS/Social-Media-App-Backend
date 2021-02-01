@@ -128,17 +128,19 @@ exports.onUserImageChange = functions
       console.log("image has changed");
       const batch = db.batch();
       return db
-        .document("screams")
+        .collection("screams")
         .where("userHandle", "==", change.before.data().handle)
         .get()
         .then((data) => {
           data.forEach((doc) => {
             const scream = db.doc(`/screams/${doc.id}`);
-            batch.update(scream, { userImage: change.after.data().imageUrl });
+            batch.update(scream, {
+              userImage: change.after.data().imageUrl,
+            });
           });
           return batch.commit();
         });
-    }
+    } else return true;
   });
 
 // Trigger function to automatically delete all associated notifications, comments and likes for a scream when it is deleted by the user:
@@ -156,13 +158,16 @@ exports.onScreamDelete = functions
         data.forEach((doc) => {
           batch.delete(db.doc(`/comments/${doc.id}`));
         });
-        return db.collection("likes").where("screamId", "==", screamId);
+        return db.collection("likes").where("screamId", "==", screamId).get();
       })
       .then((data) => {
         data.forEach((doc) => {
           batch.delete(db.doc(`/likes/${doc.id}`));
         });
-        return db.collection("notifications").where("screamId", "==", screamId);
+        return db
+          .collection("notifications")
+          .where("screamId", "==", screamId)
+          .get();
       })
       .then((data) => {
         data.forEach((doc) => {
