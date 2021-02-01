@@ -257,6 +257,7 @@ exports.uploadImage = (req, res) => {
   busboy.end(req.rawBody);
 };
 
+// Mark notification/s as read handler:
 exports.markNotificationsRead = (req, res) => {
   let batch = db.batch();
   req.body.forEach((notificationId) => {
