@@ -45,6 +45,7 @@ app.post("/notifications", FBAuth, markNotificationsRead); // POST route to mark
 exports.api = functions.region("europe-west1").https.onRequest(app);
 
 // Cloud Firestore Trigger functions for Notifications:
+// Create a user notification when a scream is liked:
 exports.createNotificationOnLike = functions
   .region("europe-west1")
   .firestore.document("likes/{id}")
@@ -73,6 +74,7 @@ exports.createNotificationOnLike = functions
       });
   });
 
+// Delete a user notification when a user unlikes a scream
 exports.deleteNotificationOnUnLike = functions
   .region("europe-west1")
   .firestore.document("likes/{id}")
@@ -86,6 +88,7 @@ exports.deleteNotificationOnUnLike = functions
       });
   });
 
+// Create a user notification when a comment is made on a scream
 exports.createNotificationOnComment = functions
   .region("europe-west1")
   .firestore.document("comments/{id}")
@@ -112,4 +115,28 @@ exports.createNotificationOnComment = functions
         console.error(err);
         return;
       });
+  });
+
+// Trigger to automatically update the userImage whenever they update their own photo for display in their screams:
+exports.onUserImageChange = functions
+  .region("europe-west1")
+  .document("/users/{userId}")
+  .onUpdate((change) => {
+    console.log(change.before.data());
+    console.log(change.after.data());
+    if (change.before.data().imageUrl !== change.after.data().imageUrl) {
+      console.log("image has changed");
+      let batch = db.batch();
+      return db
+        .document("screams")
+        .where("userHandle", "==", change.before.data().handle)
+        .get()
+        .then((data) => {
+          data.forEach((doc) => {
+            const scream = db.doc(`/screams/${doc.id}`);
+            batch.update(scream, { userImage: change.after.data().imageUrl });
+          });
+          return batch.commit();
+        });
+    }
   });
