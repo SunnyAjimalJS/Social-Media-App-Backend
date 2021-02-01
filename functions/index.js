@@ -117,16 +117,16 @@ exports.createNotificationOnComment = functions
       });
   });
 
-// Trigger to automatically update the userImage whenever they update their own photo for display in their screams:
+// Trigger to automatically update the userImage field in firebase whenever a user updates their own photo for displaying in screams:
 exports.onUserImageChange = functions
   .region("europe-west1")
-  .document("/users/{userId}")
+  .firestore.document("/users/{userId}")
   .onUpdate((change) => {
     console.log(change.before.data());
     console.log(change.after.data());
     if (change.before.data().imageUrl !== change.after.data().imageUrl) {
       console.log("image has changed");
-      let batch = db.batch();
+      const batch = db.batch();
       return db
         .document("screams")
         .where("userHandle", "==", change.before.data().handle)
@@ -139,4 +139,36 @@ exports.onUserImageChange = functions
           return batch.commit();
         });
     }
+  });
+
+// Trigger function to automatically delete all associated notifications, comments and likes for a scream when it is deleted by the user:
+exports.onScreamDelete = functions
+  .region("europe-west1")
+  .firestore.document("/screams/{screamId}")
+  .onDelete((snapshot, context) => {
+    const screamId = context.params.screamId;
+    const batch = db.batch();
+    return db
+      .collection("comments")
+      .where("screamId", "==", screamId)
+      .get()
+      .then((data) => {
+        data.forEach((doc) => {
+          batch.delete(db.doc(`/comments/${doc.id}`));
+        });
+        return db.collection("likes").where("screamId", "==", screamId);
+      })
+      .then((data) => {
+        data.forEach((doc) => {
+          batch.delete(db.doc(`/likes/${doc.id}`));
+        });
+        return db.collection("notifications").where("screamId", "==", screamId);
+      })
+      .then((data) => {
+        data.forEach((doc) => {
+          batch.delete(db.doc(`/notifications/${doc.id}`));
+        });
+        return batch.commit();
+      })
+      .catch((err) => console.error(err));
   });
