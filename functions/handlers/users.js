@@ -20,15 +20,15 @@ exports.signup = (req, res) => {
     handle: req.body.handle,
   };
 
-  // Validating signup data:
+  // Validating signup data
   const { valid, errors } = validateSignupData(newUser);
 
-  if (!valid) return res.status(400).json({ errors });
+  if (!valid) return res.status(400).json(errors);
 
-  // Blank profile image auto attach:
+  // Blank profile image auto attach
   const noImg = "no-img.png";
 
-  // Creating new data/users server side:
+  // Creating new data/users server side
   let token, userId;
   db.doc(`/users/${newUser.handle}`)
     .get()
@@ -80,7 +80,7 @@ exports.login = (req, res) => {
 
   const { valid, errors } = validateLoginData(user);
 
-  if (!valid) return res.status(400).json({ errors });
+  if (!valid) return res.status(400).json(errors);
 
   // Logging in as a user:
   firebase

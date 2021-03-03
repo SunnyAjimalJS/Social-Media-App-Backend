@@ -20,11 +20,17 @@ exports.getAllScreams = (req, res) => {
       });
       return res.json(screams);
     })
-    .catch((err) => console.error(err));
+    .catch((err) => {
+      console.error(err);
+      res.status(500).json({ error: err.code });
+    });
 };
 
 // Create a scream:
 exports.postOneScream = (req, res) => {
+  if (req.body.body.trim() === "") {
+    return res.status(400).json({ body: "Body must not be empty" });
+  }
   const newScream = {
     body: req.body.body,
     userHandle: req.user.handle,
